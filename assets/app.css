@@ -24,3 +24,41 @@
 .lang-menu button.selected{background:#f8efe7;color:#a34d27;font-weight:700}
 .lang-menu button.selected::after{content:'✓';font-weight:800}
 .lang-menu button:hover{background:#f7f3eb}
+
+/* Shared components across recipe, update, account and activation pages */
+.app{overflow-x:hidden}
+.top .back{color:#29231f;text-decoration:none;font-size:14px;font-weight:750;white-space:nowrap}
+.top .badge{flex:none}
+.top .lang-wrap{flex:none}
+.top:has(.back) .lang-wrap{margin-left:auto}
+.section>h1{font-size:27px;line-height:1.2;margin-bottom:8px}
+.section>h2{font-size:23px;line-height:1.25;margin-bottom:8px}
+.section>.muted{margin:8px 0 18px}
+.section .primary{margin-top:12px}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;margin-top:13px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid #eaded1;background:#fff;border-radius:20px;padding:8px 13px;color:#55483e;font:inherit;font-size:13px;cursor:pointer}
+.chip.on{background:#29231f;color:#fff;border-color:#29231f}
+.search{margin:12px 0 2px}
+.detailHero{height:220px;display:grid;place-items:center;font-size:92px;background:linear-gradient(135deg,#f3d4ad,#fff2de)}
+.lockbox{margin-top:22px;padding:20px;border:1px solid #f1d8c6;background:#fff7f0;border-radius:20px}
+.lockbox h2{font-size:20px;line-height:1.3}
+.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 28px}
+.spec{padding:13px;border-radius:14px;background:#f8f5ef;line-height:1.5;font-size:13px;overflow-wrap:anywhere}
+.spec b{font-size:12px;color:#a7522e}
+.list{padding-left:22px;line-height:1.8;margin:12px 0 26px}
+.step{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid #f0ebe5;line-height:1.65;font-size:14px}
+.step .num{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#fbeadb;color:#a6502d;font-weight:800}
+.notice{padding:14px 16px;margin:18px 0;border-radius:14px;background:#f7f3eb;font-size:13px;line-height:1.6;color:#62574e}
+.notice.ok{background:#eaf6ed;color:#267440}
+.month{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0;padding:16px;border:1px solid #eee5da;border-radius:18px;color:inherit;text-decoration:none;background:#fff}
+.month:hover{background:#fff8f0}
+.month>div:last-child{text-align:right}
+.month strong{display:inline-block;margin-top:8px;font-size:18px}
+.month b{color:#b7502b}
+.form{display:grid;gap:12px;margin-top:20px}
+.form label{font-weight:650}
+.form .primary{cursor:pointer}
+.secondary{margin-top:14px;border:1px solid #e5ddd4;background:#fff;color:#29231f;cursor:pointer}
+.panel .primary{max-width:100%}
+@media(max-width:390px){.top .back{max-width:85px;overflow:hidden;text-overflow:ellipsis}.top .badge{font-size:11px}.lang-btn{max-width:132px}.section{padding:18px 14px}.hero{margin:12px}.specs{gap:8px}}
