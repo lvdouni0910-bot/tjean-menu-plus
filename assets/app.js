@@ -142,7 +142,25 @@ const langIndex={zh:0,zt:1,th:2,ms:3,en:4};
 function tr(v){const lang=currentLanguage();if(lang==='vi')return v;const i=langIndex[lang],raw=v.trim();if(translations[raw])return translations[raw][i];if(raw.startsWith('← '))return '← '+tr(raw.slice(2));let m=raw.match(/^\+(\d+) món mới$/);if(m)return '+'+m[1]+' '+translations['Món mới'][i];m=raw.match(/^\+(\d+) món$/);if(m)return '+'+m[1]+' '+({zh:'道菜',zt:'道菜',th:'เมนู',ms:'resipi',en:'recipes'}[lang]);for(const key of ['Món mới','Thông số','Tài khoản:','Kích hoạt thành công'])if(raw.startsWith(key+' · ')||raw.startsWith(key+' ')){return raw.replace(key,translations[key][i])}return v}
 function translateTree(root){const lang=currentLanguage();document.documentElement.lang=lang==='zt'?'zh-Hant':lang==='zh'?'zh-Hans':lang;document.title=tr(document.title);const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&['SCRIPT','STYLE','TEXTAREA'].includes(n.parentElement.tagName)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});let n;while(n=walker.nextNode()){const v=n.nodeValue, translated=tr(v);if(translated!==v)n.nodeValue=v.replace(v.trim(),translated)}if(root.querySelectorAll)root.querySelectorAll('[placeholder]').forEach(e=>e.placeholder=tr(e.placeholder))}
 function languageSwitcher(){const header=document.querySelector('.top');if(!header)return;const wrap=document.createElement('div');wrap.className='lang-wrap';const selected=currentLanguage();const button=document.createElement('button');button.className='lang-btn';button.type='button';button.setAttribute('aria-label',LANGS[selected]);button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 4 5.5 4 9s-1.5 6.5-4 9M12 3c-2.5 2.5-4 5.5-4 9s1.5 6.5 4 9"/></svg><span class="lang-label"></span><span class="chevron" aria-hidden="true">▾</span>';button.querySelector('.lang-label').textContent=LANGS[selected];const menu=document.createElement('div');menu.className='lang-menu';for(const [code,label] of Object.entries(LANGS)){const item=document.createElement('button');item.type='button';item.textContent=label;item.setAttribute('aria-selected',String(code===selected));if(code===selected)item.classList.add('selected');item.onclick=()=>{localStorage.setItem(LANGUAGE_KEY,code);localStorage.setItem('tjean_lang',code);location.reload()};menu.append(item)}button.setAttribute('aria-haspopup','listbox');button.setAttribute('aria-expanded','false');menu.setAttribute('role','listbox');button.onclick=()=>{const open=menu.classList.toggle('show');button.setAttribute('aria-expanded',String(open))};wrap.append(button,menu);header.append(wrap);document.addEventListener('click',e=>{if(!wrap.contains(e.target)){menu.classList.remove('show');button.setAttribute('aria-expanded','false')}});document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.classList.remove('show');button.setAttribute('aria-expanded','false');button.focus()}})}
-function initLanguage(){translateTree(document.body);languageSwitcher();let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;queueMicrotask(()=>{pending=false;translateTree(document.body)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}
+
+function enhanceBottomNav(){
+ const icons={
+ '/':'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
+ '/recipes/':'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+ '/updates/':'<path d="M12 4v16M4 12h16"/>',
+ '/my/':'<circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4 3.2-6 7.5-6s7.5 2 7.5 6"/>'
+ };
+ document.querySelectorAll('.bottom .nav').forEach(link=>{
+  const path=new URL(link.href).pathname;
+  const key=path==='/recipes/'?'/recipes/':path.startsWith('/updates/')?'/updates/':path==='/my/'?'/my/':'/';
+  const label=link.textContent.trim().replace(/^[⌂⌕＋♙]\s*/,'');
+  link.textContent='';
+  const icon=document.createElement('span');icon.className='icon';icon.setAttribute('aria-hidden','true');icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+icons[key]+'</svg>';
+  const caption=document.createElement('span');caption.textContent=label;
+  link.append(icon,caption);
+ });
+}
+function initLanguage(){translateTree(document.body);enhanceBottomNav();languageSwitcher();let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;queueMicrotask(()=>{pending=false;translateTree(document.body)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}
 async function paintOwner(){const el=document.querySelector('[data-owner]');if(!el)return;try{const m=await api('/api/me');el.textContent=m.active?m.model:'Khách'}catch{el.textContent='Khách'}}
 function card(r){return `<a class="card" href="/recipe/?slug=${encodeURIComponent(r.slug)}">${r.locked?'<span class="lock">🔒 Menu+</span>':''}<div class="photo">${r.emoji||'🍽️'}</div><div class="ct"><b>${r.name}</b><div class="tag">${r.people||''}${r.update_month?' · '+r.update_month:''}</div></div></a>`}
 initLanguage();paintOwner();
