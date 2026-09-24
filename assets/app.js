@@ -1,6 +1,6 @@
 const TOKEN='tjean_menu_token';
 const getToken=()=>localStorage.getItem(TOKEN)||'';
-const api=async(url,opt={})=>{opt.headers={...(opt.headers||{}),...(getToken()?{'x-menu-token':getToken()}:{})};const r=await fetch(url,opt);const j=await r.json().catch(()=>({}));if(!r.ok)throw Error(j.error||'Có lỗi xảy ra');return j};
+const api=async(url,opt={})=>{opt.headers={...(opt.headers||{}),...(getToken()?{'x-menu-token':getToken()}:{})};const r=await fetch(url,opt);const j=await r.json().catch(()=>({}));if(!r.ok)throw Error(j.error||'Có lỗi xảy ra');if(url.startsWith('/api/recipes')&&Array.isArray(j.recipes))j.recipes=j.recipes.map(localizeRecipe);return j};
 const LANGS={vi:'Tiếng Việt',zh:'简体中文',zt:'繁體中文',th:'ไทย',ms:'Bahasa Melayu',en:'English'};
 const LANGUAGE_KEY='tjean_language';
 const legacy=localStorage.getItem('tjean_lang');
@@ -92,6 +92,45 @@ const translations={
 'Đang cập nhật Menu+':['正在更新 Menu+','正在更新 Menu+','กำลังอัปเดต Menu+','Menu+ sedang dikemas kini','Menu+ is being updated'],
 'Có lỗi xảy ra':['发生错误','發生錯誤','เกิดข้อผิดพลาด','Ralat berlaku','Something went wrong']
 };
+
+// Localized copy for the published starter recipes. Content is indexed by stable slug.
+const recipeCopy={
+'ca-hap-gung-hanh':{
+zh:{name:'姜葱蒸鱼',ingredients:['鱼 600 克','姜 15 克','葱 20 克','鱼露 15 毫升'],steps:['将鱼清理干净，在两面轻划几刀。','将姜和葱铺在鱼上。','把耐热盘放在中层。','按参数蒸制，确认鱼肉熟透。']},
+zt:{name:'薑蔥蒸魚',ingredients:['魚 600 克','薑 15 克','蔥 20 克','魚露 15 毫升'],steps:['將魚清理乾淨，在兩面輕劃幾刀。','將薑和蔥鋪在魚上。','把耐熱盤放在中層。','依參數蒸製，確認魚肉熟透。']},
+th:{name:'ปลานึ่งขิงต้นหอม',ingredients:['ปลา 600 กรัม','ขิง 15 กรัม','ต้นหอม 20 กรัม','น้ำปลา 15 มล.'],steps:['ล้างปลาและบั้งเบา ๆ ทั้งสองด้าน','วางขิงและต้นหอมบนตัวปลา','วางจานทนความร้อนบนชั้นกลาง','นึ่งตามค่าที่กำหนดและตรวจว่าปลาสุกทั่ว']},
+ms:{name:'Ikan kukus halia dan daun bawang',ingredients:['Ikan 600 g','Halia 15 g','Daun bawang 20 g','Sos ikan 15 ml'],steps:['Bersihkan ikan dan kelar sedikit pada kedua-dua belah.','Taburkan halia dan daun bawang di atas ikan.','Letakkan pinggan tahan panas di rak tengah.','Kukus mengikut tetapan dan pastikan ikan masak.']},
+en:{name:'Ginger and scallion steamed fish',ingredients:['Fish 600 g','Ginger 15 g','Scallions 20 g','Fish sauce 15 ml'],steps:['Clean the fish and lightly score both sides.','Place ginger and scallions over the fish.','Place a heatproof plate on the middle rack.','Steam using the settings and check that the fish is cooked through.']}},
+'banh-mi-bo-toi':{
+zh:{name:'蒜香黄油面包',ingredients:['面包 200 克','无盐黄油 35 克','蒜 10 克','欧芹 5 克'],steps:['将软化黄油与蒜和欧芹拌匀。','均匀涂在面包上。','把面包单层摆在烤盘上。','烤至边缘金黄酥脆。']},
+zt:{name:'蒜香奶油麵包',ingredients:['麵包 200 克','無鹽奶油 35 克','蒜 10 克','巴西里 5 克'],steps:['將軟化奶油與蒜和巴西里拌勻。','均勻塗在麵包上。','把麵包單層擺在烤盤上。','烤至邊緣金黃酥脆。']},
+th:{name:'ขนมปังกระเทียมเนย',ingredients:['ขนมปัง 200 กรัม','เนยจืด 35 กรัม','กระเทียม 10 กรัม','พาร์สลีย์ 5 กรัม'],steps:['ผสมเนยนิ่มกับกระเทียมและพาร์สลีย์','ทาให้ทั่วขนมปัง','เรียงขนมปังชั้นเดียวบนถาด','อบจนขอบเหลืองกรอบ']},
+ms:{name:'Roti mentega bawang putih',ingredients:['Roti 200 g','Mentega tanpa garam 35 g','Bawang putih 10 g','Parsli 5 g'],steps:['Gaulkan mentega lembut dengan bawang putih dan parsli.','Sapu rata pada roti.','Susun roti selapis di atas dulang.','Bakar sehingga tepinya keemasan dan rangup.']},
+en:{name:'Garlic butter bread',ingredients:['Bread 200 g','Unsalted butter 35 g','Garlic 10 g','Parsley 5 g'],steps:['Mix softened butter with garlic and parsley.','Spread evenly over the bread.','Arrange the bread in one layer on the tray.','Bake until the edges are golden and crisp.']}},
+'uc-ga-rau-cu':{
+zh:{name:'少油鸡胸肉配蔬菜',ingredients:['鸡胸肉 350 克','西兰花 180 克','胡萝卜 120 克','橄榄油 8 毫升'],steps:['将蔬菜切成大小均匀的块。','鸡肉稍加调味，腌制 15 分钟。','食材单层摆放，不要堆叠。','按参数烤制，必要时中途翻动一次蔬菜。']},
+zt:{name:'少油雞胸肉配蔬菜',ingredients:['雞胸肉 350 克','青花菜 180 克','胡蘿蔔 120 克','橄欖油 8 毫升'],steps:['將蔬菜切成大小均勻的塊。','雞肉稍加調味，醃製 15 分鐘。','食材單層擺放，不要堆疊。','依參數烤製，必要時中途翻動一次蔬菜。']},
+th:{name:'อกไก่อบผักใช้น้ำมันน้อย',ingredients:['อกไก่ 350 กรัม','บรอกโคลี 180 กรัม','แครอต 120 กรัม','น้ำมันมะกอก 8 มล.'],steps:['หั่นผักเป็นชิ้นขนาดใกล้เคียงกัน','หมักไก่ด้วยเครื่องปรุงเล็กน้อย 15 นาที','เรียงอาหารชั้นเดียว ไม่วางซ้อน','อบตามค่าที่กำหนด พลิกผักหนึ่งครั้งหากจำเป็น']},
+ms:{name:'Dada ayam dan sayur rendah minyak',ingredients:['Dada ayam 350 g','Brokoli 180 g','Lobak merah 120 g','Minyak zaitun 8 ml'],steps:['Potong sayur kepada saiz yang sekata.','Perasakan ayam sedikit dan perap selama 15 minit.','Susun selapis tanpa menindih makanan.','Bakar mengikut tetapan; balikkan sayur sekali jika perlu.']},
+en:{name:'Low-oil chicken breast and vegetables',ingredients:['Chicken breast 350 g','Broccoli 180 g','Carrot 120 g','Olive oil 8 ml'],steps:['Cut the vegetables into even-sized pieces.','Season the chicken lightly and marinate for 15 minutes.','Arrange food in one layer without stacking.','Bake using the settings; turn the vegetables once if needed.']}},
+'ga-nuong-mat-ong':{
+zh:{name:'蜜汁烤鸡',ingredients:['整鸡 1.2 千克','蜂蜜 25 克','鱼露 20 毫升','蒜末 12 克','食用油 10 毫升'],steps:['擦干鸡身，拌入调味料，至少腌制 30 分钟。','如果型号要求，预热烤箱 5 分钟。','将鸡放在烤架上，下层放接油盘。','按对应型号参数烤制；食用前检查最厚处是否熟透。']},
+zt:{name:'蜜汁烤雞',ingredients:['全雞 1.2 公斤','蜂蜜 25 克','魚露 20 毫升','蒜末 12 克','食用油 10 毫升'],steps:['擦乾雞身，拌入調味料，至少醃製 30 分鐘。','如果型號要求，預熱烤箱 5 分鐘。','將雞放在烤架上，下層放接油盤。','依對應型號參數烤製；食用前檢查最厚處是否熟透。']},
+th:{name:'ไก่อบซอสน้ำผึ้ง',ingredients:['ไก่ทั้งตัว 1.2 กก.','น้ำผึ้ง 25 กรัม','น้ำปลา 20 มล.','กระเทียมสับ 12 กรัม','น้ำมันพืช 10 มล.'],steps:['ซับไก่ให้แห้ง คลุกเครื่องปรุงและหมักอย่างน้อย 30 นาที','อุ่นเตา 5 นาทีหากรุ่นที่ใช้กำหนด','วางไก่บนตะแกรงและถาดรองน้ำมันชั้นล่าง','อบตามค่าของรุ่น ตรวจส่วนที่หนาที่สุดว่าสุกก่อนรับประทาน']},
+ms:{name:'Ayam panggang madu',ingredients:['Ayam seekor 1.2 kg','Madu 25 g','Sos ikan 20 ml','Bawang putih cincang 12 g','Minyak masak 10 ml'],steps:['Keringkan ayam, gaul dengan perasa dan perap sekurang-kurangnya 30 minit.','Panaskan ketuhar 5 minit jika model anda memerlukannya.','Letakkan ayam di atas rak dan dulang minyak di bawah.','Panggang mengikut model; pastikan bahagian paling tebal masak sebelum dimakan.']},
+en:{name:'Honey roast chicken',ingredients:['Whole chicken 1.2 kg','Honey 25 g','Fish sauce 20 ml','Minced garlic 12 g','Cooking oil 10 ml'],steps:['Pat the chicken dry, mix with seasonings and marinate for at least 30 minutes.','Preheat the oven for 5 minutes if your model requires it.','Place the chicken on a rack with a drip tray below.','Roast using your model settings; check the thickest part is cooked before serving.']}}
+};
+function localizeRecipe(r){
+ const lang=currentLanguage();if(lang==='vi')return r;
+ const copy=(r.translations&&r.translations[lang])||recipeCopy[r.slug]?.[lang];
+ const people=(r.people||'').replace(/người/g,{zh:'人份',zt:'人份',th:'ที่',ms:'orang',en:'servings'}[lang]);
+ const params=r.params&&Object.fromEntries(Object.entries(r.params).map(([model,p])=>[model,p&&{
+ ...p,mode:({'Steam':{zh:'蒸',zt:'蒸',th:'นึ่ง',ms:'Kukus',en:'Steam'},'Bake':{zh:'烤',zt:'烤',th:'อบ',ms:'Bakar',en:'Bake'},'Steam + Bake':{zh:'蒸烤',zt:'蒸烤',th:'นึ่ง + อบ',ms:'Kukus + Bakar',en:'Steam + Bake'}}[p.mode]?.[lang]||p.mode),
+ time:(p.time||'').replace('phút',{zh:'分钟',zt:'分鐘',th:'นาที',ms:'minit',en:'min'}[lang]),
+ rack:(p.rack||'').replace('Tầng giữa',{zh:'中层',zt:'中層',th:'ชั้นกลาง',ms:'Rak tengah',en:'Middle rack'}[lang]).replace(/Tầng (\d+)/,(_,n)=>({zh:'第'+n+'层',zt:'第'+n+'層',th:'ชั้นที่ '+n,ms:'Rak '+n,en:'Rack '+n}[lang]))
+ }]));
+ return {...r,people,name:copy?.name||r.name,ingredients:copy?.ingredients||r.ingredients,steps:copy?.steps||r.steps,params};
+}
 const langIndex={zh:0,zt:1,th:2,ms:3,en:4};
 function tr(v){const lang=currentLanguage();if(lang==='vi')return v;const i=langIndex[lang],raw=v.trim();if(translations[raw])return translations[raw][i];let m=raw.match(/^\+(\d+) món mới$/);if(m)return '+'+m[1]+' '+translations['Món mới'][i];m=raw.match(/^\+(\d+) món$/);if(m)return '+'+m[1]+' '+({zh:'道菜',zt:'道菜',th:'เมนู',ms:'resipi',en:'recipes'}[lang]);for(const key of ['Món mới','Thông số','Tài khoản:','Kích hoạt thành công'])if(raw.startsWith(key+' · ')||raw.startsWith(key+' ')){return raw.replace(key,translations[key][i])}return v}
 function translateTree(root){const lang=currentLanguage();document.documentElement.lang=lang==='zt'?'zh-Hant':lang==='zh'?'zh-Hans':lang;document.title=tr(document.title);const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&['SCRIPT','STYLE','TEXTAREA'].includes(n.parentElement.tagName)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});let n;while(n=walker.nextNode()){const v=n.nodeValue, translated=tr(v);if(translated!==v)n.nodeValue=v.replace(v.trim(),translated)}if(root.querySelectorAll)root.querySelectorAll('[placeholder]').forEach(e=>e.placeholder=tr(e.placeholder))}
