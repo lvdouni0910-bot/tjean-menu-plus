@@ -8,6 +8,12 @@ if(!localStorage.getItem(LANGUAGE_KEY)&&legacy)localStorage.setItem(LANGUAGE_KEY
 const currentLanguage=()=>{const l=localStorage.getItem(LANGUAGE_KEY)||'vi';return LANGS[l]?l:'vi'};
 const qs=k=>new URLSearchParams(location.search).get(k);
 const translations={
+'MENU+ UPDATE':['MENU+ 更新','MENU+ 更新','อัปเดต MENU+','KEMAS KINI MENU+','MENU+ UPDATE'],
+'MENU+ OWNER':['Menu+ 机主专属','Menu+ 機主專屬','MENU+ สำหรับเจ้าของ','MENU+ PEMILIK','MENU+ OWNER'],
+'TJEAN OWNER':['TJEAN 机主','TJEAN 機主','เจ้าของ TJEAN','PEMILIK TJEAN','TJEAN OWNER'],
+'Healthy':['健康','健康','สุขภาพ','Sihat','Healthy'],
+'🔒 Công thức dành cho chủ sở hữu':['🔒 机主专属菜谱','🔒 機主專屬食譜','🔒 สูตรสำหรับเจ้าของเครื่อง','🔒 Resipi untuk pemilik','🔒 Owner recipe'],
+
 'Công thức · TJean Menu+':['菜谱 · TJean Menu+','食譜 · TJean Menu+','สูตรอาหาร · TJean Menu+','Resipi · TJean Menu+','Recipes · TJean Menu+'],
 'Chi tiết món · TJean Menu+':['菜谱详情 · TJean Menu+','食譜詳情 · TJean Menu+','รายละเอียดสูตร · TJean Menu+','Butiran resipi · TJean Menu+','Recipe details · TJean Menu+'],
 'Menu+ của tôi · TJean':['我的 Menu+ · TJean','我的 Menu+ · TJean','Menu+ ของฉัน · TJean','Menu+ saya · TJean','My Menu+ · TJean'],
