@@ -8,6 +8,11 @@ if(!localStorage.getItem(LANGUAGE_KEY)&&legacy)localStorage.setItem(LANGUAGE_KEY
 const currentLanguage=()=>{const l=localStorage.getItem(LANGUAGE_KEY)||'vi';return LANGS[l]?l:'vi'};
 const qs=k=>new URLSearchParams(location.search).get(k);
 const translations={
+'Vui lòng chọn nền tảng, nhập email/số điện thoại và mã đơn hàng.':['请选择平台，并输入邮箱或手机号及订单号。','請選擇平台，並輸入電郵或電話號碼及訂單號。','กรุณาเลือกแพลตฟอร์มและกรอกอีเมล/เบอร์โทรศัพท์กับเลขคำสั่งซื้อ','Sila pilih platform dan masukkan e-mel/nombor telefon serta nombor pesanan.','Choose a platform and enter your email/phone number and order number.'],
+'Không tìm thấy đơn hàng đủ điều kiện. Vui lòng kiểm tra nền tảng và mã đơn hàng.':['未找到符合条件的订单，请检查平台和订单号。','找不到符合條件的訂單，請檢查平台和訂單號。','ไม่พบคำสั่งซื้อที่มีสิทธิ์ กรุณาตรวจสอบแพลตฟอร์มและเลขคำสั่งซื้อ','Pesanan yang layak tidak ditemui. Semak platform dan nombor pesanan.','Eligible order not found. Check the platform and order number.'],
+'Đơn hàng này đã được liên kết với tài khoản Menu+ khác.':['此订单已绑定其他 Menu+ 账户。','此訂單已綁定其他 Menu+ 帳戶。','คำสั่งซื้อนี้เชื่อมกับบัญชี Menu+ อื่นแล้ว','Pesanan ini telah dipautkan kepada akaun Menu+ lain.','This order is linked to another Menu+ account.'],
+'Method not allowed':['不支持此操作','不支援此操作','ไม่รองรับการดำเนินการนี้','Kaedah tidak dibenarkan','Method not allowed'],
+
 'Menu+ Update · TJean':['Menu+ 更新 · TJean','Menu+ 更新 · TJean','อัปเดต Menu+ · TJean','Kemas kini Menu+ · TJean','Menu+ Updates · TJean'],
 'MENU+ UPDATE':['MENU+ 更新','MENU+ 更新','อัปเดต MENU+','KEMAS KINI MENU+','MENU+ UPDATE'],
 'MENU+ OWNER':['Menu+ 机主专属','Menu+ 機主專屬','MENU+ สำหรับเจ้าของ','MENU+ PEMILIK','MENU+ OWNER'],
