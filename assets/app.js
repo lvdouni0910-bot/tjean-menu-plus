@@ -8,6 +8,12 @@ if(!localStorage.getItem(LANGUAGE_KEY)&&legacy)localStorage.setItem(LANGUAGE_KEY
 const currentLanguage=()=>{const l=localStorage.getItem(LANGUAGE_KEY)||'vi';return LANGS[l]?l:'vi'};
 const qs=k=>new URLSearchParams(location.search).get(k);
 const translations={
+'Công thức · TJean Menu+':['菜谱 · TJean Menu+','食譜 · TJean Menu+','สูตรอาหาร · TJean Menu+','Resipi · TJean Menu+','Recipes · TJean Menu+'],
+'Chi tiết món · TJean Menu+':['菜谱详情 · TJean Menu+','食譜詳情 · TJean Menu+','รายละเอียดสูตร · TJean Menu+','Butiran resipi · TJean Menu+','Recipe details · TJean Menu+'],
+'Menu+ của tôi · TJean':['我的 Menu+ · TJean','我的 Menu+ · TJean','Menu+ ของฉัน · TJean','Menu+ saya · TJean','My Menu+ · TJean'],
+'Món mới · TJean Menu+':['新菜谱 · TJean Menu+','新食譜 · TJean Menu+','เมนูใหม่ · TJean Menu+','Resipi baru · TJean Menu+','New recipes · TJean Menu+'],
+'Kích hoạt · TJean Menu+':['激活 · TJean Menu+','啟用 · TJean Menu+','เปิดใช้งาน · TJean Menu+','Aktifkan · TJean Menu+','Activate · TJean Menu+'],
+
 'Khách':['访客','訪客','ผู้เยี่ยมชม','Tetamu','Guest'],
 '100+ MÓN · CẬP NHẬT MỖI THÁNG':['100+道菜 · 每月更新','100+道菜 · 每月更新','100+ เมนู · อัปเดตทุกเดือน','100+ hidangan · Dikemas kini setiap bulan','100+ recipes · Updated monthly'],
 'Một chiếc lò.':['一台烤箱。','一台烤箱。','เตาอบเครื่องเดียว','Satu ketuhar.','One oven.'],
