@@ -51,6 +51,6 @@ export default async (req: Request, _context: Context) => {
   const [data, meta] = await Promise.all([store().get(recipe.image_key, { type: 'arrayBuffer' }), store().getMetadata(recipe.image_key)]);
   if (!data) return json('Image not found', 404);
   const type = String(meta?.metadata?.contentType || 'image/jpeg');
-  return new Response(data, { headers: { 'Content-Type': type, 'Cache-Control': 'public, max-age=60', 'X-Content-Type-Options': 'nosniff' } });
+  return new Response(data, { headers: { 'Content-Type': type, 'Cache-Control': recipe.status === 'published' ? 'public, max-age=60' : 'private, no-store', 'X-Content-Type-Options': 'nosniff' } });
 };
 export const config: Config = { path: '/api/recipe-image' };
