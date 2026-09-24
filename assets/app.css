@@ -16,3 +16,11 @@
 .update p{margin:10px 0 18px;color:#6f6257;font-size:13px;line-height:1.5}
 .update .go{display:inline-flex;align-items:center;font-size:13px;font-weight:750;color:#b7502b}
 .update:hover{border-color:#dfa976;box-shadow:0 8px 24px rgba(123,69,29,.12)}
+
+/* Compact language dropdown; no platform-dependent flag glyphs */
+.lang-wrap{margin-right:0}
+.lang-menu{top:calc(100% + 8px);right:0;width:172px;max-width:calc(100vw - 24px);padding:5px;border-radius:14px;box-shadow:0 12px 28px rgba(38,27,18,.15)}
+.lang-menu button{display:flex;align-items:center;justify-content:space-between;min-height:38px;padding:8px 10px;font-size:13px;line-height:1.2;color:#29231f;cursor:pointer}
+.lang-menu button.selected{background:#f8efe7;color:#a34d27;font-weight:700}
+.lang-menu button.selected::after{content:'✓';font-weight:800}
+.lang-menu button:hover{background:#f7f3eb}
