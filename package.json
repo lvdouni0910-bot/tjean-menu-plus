@@ -1,1 +1,1 @@
-{"name":"tjean-menu-plus","type":"module","dependencies":{"@netlify/database":"latest","@netlify/functions":"latest"}}
+{"name":"tjean-menu-plus","type":"module","dependencies":{"@netlify/blobs":"latest","@netlify/database":"latest","@netlify/functions":"latest"}}
