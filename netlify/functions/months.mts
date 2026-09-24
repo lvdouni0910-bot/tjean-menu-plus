@@ -1,0 +1,2 @@
+import type {Config} from '@netlify/functions';import {getDatabase} from '@netlify/database';
+export default async()=>{const db=getDatabase();const rows=await db.sql`SELECT update_month AS month,COUNT(*)::int AS count FROM recipes WHERE status='published' AND update_month IS NOT NULL GROUP BY update_month ORDER BY update_month DESC`;return Response.json({months:rows})};export const config:Config={path:'/api/months'};

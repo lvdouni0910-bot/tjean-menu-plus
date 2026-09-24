@@ -1,0 +1,2 @@
+import type {Config} from '@netlify/functions';import {getDatabase} from '@netlify/database';
+export default async(req:Request)=>{if(req.method!=='POST')return new Response(null,{status:405});const {id}=await req.json();if(id){const db=getDatabase();await db.sql`INSERT INTO recipe_views(recipe_id) VALUES(${Number(id)})`;}return Response.json({ok:true})};export const config:Config={path:'/api/view'};
