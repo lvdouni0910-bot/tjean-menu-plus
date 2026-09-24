@@ -8,7 +8,7 @@ export default async(req:Request,ctx:Context)=>{
  if(slug) rows=await db.sql`SELECT * FROM recipes WHERE status='published' AND slug=${slug} LIMIT 1`;
  else if(month) rows=await db.sql`SELECT * FROM recipes WHERE status='published' AND update_month=${month} ORDER BY id DESC`;
  else rows=await db.sql`SELECT * FROM recipes WHERE status='published' ORDER BY COALESCE(update_month,'0000-00') DESC,id DESC`;
- const recipes=rows.map((r:any)=>{const locked=!r.free&&!s;const out:any={id:r.id,slug:r.slug,name:r.name,emoji:r.emoji,categories:r.categories,free:r.free,people:r.people,update_month:r.update_month,locked};if(!locked){out.ingredients=r.ingredients;out.steps=r.steps;out.params=s?{[s.model]:r.params?.[s.model]??null}:r.params;}return out});
+ const recipes=rows.map((r:any)=>{const locked=!r.free&&!s;const out:any={id:r.id,slug:r.slug,name:r.name,emoji:r.emoji,image_url:r.image_key?'/api/recipe-image?id='+r.id+'&v='+encodeURIComponent(r.image_key):null,categories:r.categories,free:r.free,people:r.people,update_month:r.update_month,locked};if(!locked){out.ingredients=r.ingredients;out.steps=r.steps;out.params=s?{[s.model]:r.params?.[s.model]??null}:r.params;}return out});
  return Response.json({recipes,session:s?{model:s.model,owner:s.owner}:null});
 };
 export const config:Config={path:'/api/recipes'};
