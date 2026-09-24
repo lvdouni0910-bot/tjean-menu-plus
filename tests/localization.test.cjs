@@ -1,0 +1,11 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const source=fs.readFileSync(path.join(__dirname,'../assets/app.js'),'utf8').replace('initLanguage();paintOwner();','');
+const pages=['index.html','recipes/index.html','recipe/index.html','updates/index.html','updates/month.html','my/index.html','activate/index.html'];
+function app(lang){const storage={getItem:key=>key==='tjean_language'?lang:null,setItem(){}};return new Function('localStorage',source+';return {tr,localizeRecipe,translations,recipeCopy};')(storage)}
+test('every visible static page label has a translation',()=>{const dict=app('zh').translations;for(const page of pages){const html=fs.readFileSync(path.join(__dirname,'..',page),'utf8').replace(/<script[\\s\\S]*?<\\/script>/g,'');for(const match of html.matchAll(/>([^<>]+)</g)){let label=match[1].trim().replace(/^← /,'');if(!label||!/[A-Za-zÀ-ỹ]/.test(label)||/^(TJean|Menu\\+|AirChef|ShellBake|Dolphin|LumiBake|UBaker|JoyBake|TikTok|Shopee)/.test(label))continue;assert.ok(dict[label],page+': '+label)}}});
+test('translations cover all five non-Vietnamese languages',()=>{for(const [key,values] of Object.entries(app('zh').translations))assert.equal(values.length,5,key)});
+test('starter recipes have localized names, ingredients, steps and settings',()=>{for(const lang of ['zh','zt','th','ms','en']){const {localizeRecipe,recipeCopy}=app(lang);for(const slug of Object.keys(recipeCopy)){const original={slug,name:'Tên Việt',people:'2–3 người',ingredients:['Cá 600 g'],steps:['Làm sạch cá'],params:{'ShellBake S1':{mode:'Steam',temp:'100°C',time:'16–20 phút',rack:'Tầng giữa'}}};const result=localizeRecipe(original);assert.notEqual(result.name,original.name,lang+': '+slug);assert.notDeepEqual(result.ingredients,original.ingredients);assert.notDeepEqual(result.steps,original.steps);assert.ok(!result.people.includes('người'));assert.ok(!result.params['ShellBake S1'].time.includes('phút'))}}});
+test('back navigation and dynamic count translate',()=>{for(const lang of ['zh','zt','th','ms','en']){const {tr}=app(lang);assert.notEqual(tr('← Quay lại'),'← Quay lại');assert.notEqual(tr('+4 món mới'),'+4 món mới')}});
